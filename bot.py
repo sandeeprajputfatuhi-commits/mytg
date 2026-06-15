@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+import os
 import random
 from groq import Groq
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram import Bot
-import os
-from dotenv import load_dotenv
+import pytz
+
+IST = pytz.timezone('Asia/Kolkata')
 load_dotenv()
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
@@ -50,10 +53,10 @@ async def test_run():
 
 
 async def main():
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(post_daily, 'cron', hour=9, minute=0)
-    scheduler.add_job(post_daily, 'cron', hour=14, minute=0)
-    scheduler.add_job(post_daily, 'cron', hour=20, minute=0)
+    scheduler = AsyncIOScheduler(timezone=IST)
+    scheduler.add_job(post_daily, 'cron', hour=9, minute=0, timezone=IST)
+    scheduler.add_job(post_daily, 'cron', hour=14, minute=0, timezone=IST)
+    scheduler.add_job(post_daily, 'cron', hour=20, minute=0, timezone=IST)
     scheduler.start()
     print("🚀 Bot scheduler started! Waiting for scheduled times...")
 
